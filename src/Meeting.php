@@ -33,8 +33,8 @@ class Meeting extends GClient
         try {
             $validated=Validator::make($meeting, [
                 'title'    => 'required|string|max:128',
-                'start'    => 'required|date_format:Y-m-d H:i:s',
-                'end'    => 'required|date_format:Y-m-d H:i:s',
+                'start'    => 'required|before:end|date_format:Y-m-d H:i:s',
+                'end'    => 'required|after:start|date_format:Y-m-d H:i:s',
             ]);
             if($validated->fails()){
                 \Log::error("MeetingCreation::Validation ".$validated->getMessageBag());
@@ -68,13 +68,13 @@ class Meeting extends GClient
         } catch (GuzzleException $e) {
             throw $e;
         }
-    }public function upateMe($meetingId,$meeting)
+    }public function updateMe($meetingId,$meeting)
     {
         try {
             $validated=Validator::make($meeting, [
                 'title'    => 'required|string|max:128',
-                'start'    => 'required|date_format:Y-m-d H:i:s',
-                'end'    => 'required|date_format:Y-m-d H:i:s',
+                'start'    => 'required|before:end|date_format:Y-m-d H:i:s',
+                'end'    => 'required|after:start|date_format:Y-m-d H:i:s',
             ]);
             if($validated->fails()){
                 \Log::error("MeetingCreation::Validation ".$validated->getMessageBag());
