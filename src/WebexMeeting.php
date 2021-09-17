@@ -2,9 +2,7 @@
 
 namespace Applab\WebexMeeting;
 
-use Applab\WebexMeeting\Models\WebexLog;
 use Exception;
-use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
 
 class WebexMeeting
@@ -158,7 +156,7 @@ class WebexMeeting
         try{
             if(!empty($inviteeID)){
                 $response= $this->inviteeClass->deleteInviT($inviteeID);
-                return json_decode(['status'=>'success','code'=>$response]);
+                return json_encode(['status'=>'success','code'=>$response]);
             }else{
                 throw new Exception('Invalid input!, Ensure input(s) are correct');
             }
