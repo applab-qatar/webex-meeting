@@ -1,0 +1,43 @@
+{
+    "name": "applab/webex-meeting",
+    "description": "Applab Webex Meeting",
+    "keywords": [
+        "laravel",
+        "cisco",
+        "webex",
+        "meeting",
+        "Applab",
+        "Qatar"
+    ],
+    "require": {
+        "php": ">=5.6",
+        "guzzlehttp/guzzle": ">=6"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Applab\\WebexMeeting\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Applab\\WebexMeeting\\WebexMeetingServiceProvider"
+            ],"aliases": {
+                "WebexMeeting": "Applab\\WebexMeeting\\Facades\\WebexMeeting"
+            }
+        }
+    },
+    "authors": [
+        {
+            "name": "manu-applab",
+            "email": "manu@applab.qa"
+        }
+    ],
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "dev"
+}
