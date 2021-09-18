@@ -13,7 +13,7 @@ class Authentication extends GClient
     {
         try{
             if(config('applab-webex.client-id')!='' && config('applab-webex.client-secret')!='') {
-                if(Cache::has('webex-access-refresh-token') || !empty(Cache::get('webex-access-refresh-token')) || !empty(config('applab-webex.refresh-token'))) {
+                if((Cache::has('webex-access-refresh-token') && !empty(Cache::get('webex-access-refresh-token'))) || !empty(config('applab-webex.refresh-token'))) {
                     $body = [
                         'grant_type' => 'refresh_token',
                         'client_id' => config('applab-webex.client-id'),
