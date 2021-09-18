@@ -17,7 +17,7 @@ class CreateWebexParticipantTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('meeting_id');
             $table->longText('participants')->nullable();
-            $table->timestamp();
+            $table->timestamps();
         });
     }
 
