@@ -61,7 +61,7 @@ class Invitee extends GClient
             $body=json_encode($invitee);
             $logCreated=new WebexLog();
             $logCreated->event='create';
-            $logCreated->loggable_type=get_class($register);
+            $logCreated->loggable_type=$register->getMorphClass();
             $logCreated->loggable_id=$register->id;
             $logCreated->request=$body;
             $logCreated->created_at=now();
@@ -107,6 +107,9 @@ class Invitee extends GClient
                 ], 'json' => $body
             ]);
             if ($response->getBody()->getContents()) {
+                if ($response->getStatusCode()==200) {
+                    WebexLog::where('response_id', $inviteeId)->update(['response' => $response->getBody()]);
+                }
                 return $response->getBody();
             }
             throw new Exception("Invitee Creation failed");
@@ -126,6 +129,7 @@ class Invitee extends GClient
                 ]
             ]);
             if ($response->getStatusCode()==200 || $response->getStatusCode()==204) {
+                WebexLog::where('response_id',$inviteeId)->delete();
                 return $response->getStatusCode();
             }
             throw new Exception("Invitee Deletion failed");

@@ -41,13 +41,7 @@ class Meeting extends GClient
                 throw new Exception("Invalid input!, Ensure input(s) are correct");
             }
             $body=json_encode($meeting);
-            $logCreated=new WebexLog();
-            $logCreated->event='create';
-            $logCreated->loggable_type=get_class($event);
-            $logCreated->loggable_id=$event->id;
-            $logCreated->request=$body;
-            $logCreated->created_at=now();
-            $logCreated->save();
+            $logCreated=$this->logEntry('create',$event,$body);
             $response = $this->client->request('POST', 'meetings', [
                 'headers' => [
                     'Authorization' => "Bearer " . Cache::get('webex-access-token'),
@@ -68,7 +62,8 @@ class Meeting extends GClient
         } catch (GuzzleException $e) {
             throw $e;
         }
-    }public function updateMe($meetingId,$meeting)
+    }
+    public function updateMe($meetingId,$meeting)
     {
         try {
             $validated=Validator::make($meeting, [
@@ -81,6 +76,12 @@ class Meeting extends GClient
                 throw new Exception("Invalid input!, Ensure input(s) are correct");
             }
             $body=json_encode($meeting);
+            $WebexLog=WebexLog::where('response_id', $meetingId)->where('event','create')->first();
+            $logCreated = $WebexLog->replicate()->fill([
+                'event' => 'update',
+                'request' => $body,
+                'response_id'=>''
+            ]);
             $response = $this->client->request('PUT', 'meetings/'.$meetingId, [
                 'headers' => [
                     'Authorization' => "Bearer " . Cache::get('webex-access-token'),
@@ -89,6 +90,12 @@ class Meeting extends GClient
                 ], 'json' => $body
             ]);
             if ($response->getBody()->getContents()) {
+                if ($response->getStatusCode()==200) {
+                    $result=json_decode($response->getBody());
+                    $logCreated->response_id = $result->id;
+                    $logCreated->response = $response->getBody();
+                    $logCreated->save();
+                }
                 return $response->getBody();
             }
             throw new Exception("Meeting Creation failed");
@@ -115,5 +122,16 @@ class Meeting extends GClient
         } catch (GuzzleException $e) {
             throw $e;
         }
+    }
+    private function logEntry($logType,$model,$request)
+    {
+        $logCreated=new WebexLog();
+        $logCreated->event=$logType;
+        $logCreated->loggable_type=$model->getMorphClass();
+        $logCreated->loggable_id=$model->id;
+        $logCreated->request=$request;
+        //$logCreated->created_at=now();
+        $logCreated->save();
+        return $logCreated;
     }
 }
