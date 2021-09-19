@@ -7,7 +7,7 @@ use Applab\WebexMeeting\Models\WebexLog;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
-
+use Exception;
 class Invitee extends GClient
 {
     public function getInviTes($meetingId)
@@ -23,7 +23,7 @@ class Invitee extends GClient
             if ($response->getStatusCode()==200) {
                 return $response->getBody();
             }
-            throw new \Exception("Invitees Listing failed");
+            throw new Exception("Invitees Listing failed");
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -42,7 +42,7 @@ class Invitee extends GClient
             if ($response->getStatusCode()==200) {
                 return $response->getBody();
             }
-            throw new \Exception("Invitee details failed");
+            throw new Exception("Invitee details failed");
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -82,7 +82,7 @@ class Invitee extends GClient
                 }
                 return $response->getBody();
             }
-            throw new \Exception("Invitee Creation failed");
+            throw new Exception("Invitee Creation failed");
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -109,7 +109,7 @@ class Invitee extends GClient
             if ($response->getBody()->getContents()) {
                 return $response->getBody();
             }
-            throw new \Exception("Invitee Creation failed");
+            throw new Exception("Invitee Creation failed");
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -128,7 +128,7 @@ class Invitee extends GClient
             if ($response->getStatusCode()==200 || $response->getStatusCode()==204) {
                 return $response->getStatusCode();
             }
-            throw new \Exception("Invitee Deletion failed");
+            throw new Exception("Invitee Deletion failed");
         } catch (GuzzleException $e) {
             throw $e;
         }

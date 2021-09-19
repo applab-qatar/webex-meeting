@@ -7,7 +7,7 @@ use Applab\WebexMeeting\Models\WebexLog;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
-
+use Exception;
 class Meeting extends GClient
 {
     public function getMe($meetingId)
@@ -64,7 +64,7 @@ class Meeting extends GClient
                 }
                 return $response->getBody();
             }
-            throw new \Exception("Meeting Creation failed");
+            throw new Exception("Meeting Creation failed");
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -91,7 +91,7 @@ class Meeting extends GClient
             if ($response->getBody()->getContents()) {
                 return $response->getBody();
             }
-            throw new \Exception("Meeting Creation failed");
+            throw new Exception("Meeting Creation failed");
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -111,7 +111,7 @@ class Meeting extends GClient
                 WebexLog::where('response_id',$meetingId)->delete();
                 return $response->getStatusCode();
             }
-            throw new \Exception("Meeting Deletion failed");
+            throw new Exception("Meeting Deletion failed");
         } catch (GuzzleException $e) {
             throw $e;
         }

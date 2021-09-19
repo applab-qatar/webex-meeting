@@ -5,8 +5,7 @@ namespace Applab\WebexMeeting;
 
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Validator;
-
+use Exception;
 class Participants extends GClient
 {
     public function getPartcpants($meetingId)
@@ -22,7 +21,7 @@ class Participants extends GClient
             if ($response->getStatusCode()==200) {
                 return $response->getBody();
             }
-            throw new \Exception("Participants Listing failed");
+            throw new Exception("Participants Listing failed");
         } catch (GuzzleException $e) {
             throw $e;
         }
@@ -41,7 +40,7 @@ class Participants extends GClient
             if ($response->getStatusCode()==200) {
                 return $response->getBody();
             }
-            throw new \Exception("Participants details failed");
+            throw new Exception("Participants details failed");
         } catch (GuzzleException $e) {
             throw $e;
         }
