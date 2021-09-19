@@ -12,7 +12,7 @@ class WebexMeeting
      */
     public function __construct()
     {
-        if(!Cache::has('webex-access-token') || empty(Cache::get('webex-access-token')) || !Cache::has('webex-access-refresh-token') || empty(Cache::get('webex-access-refresh-token'))){
+        if(!Cache::has('webex-access-token') && empty(Cache::get('webex-access-token')) && !Cache::has('webex-access-refresh-token') && empty(Cache::get('webex-access-refresh-token'))){
             $this->authClass=new Authentication();
             $this->authClass->login();
         }
