@@ -15,7 +15,7 @@ class Invitee extends GClient
         try {
             $response = $this->client->request('GET', 'meetingInvitees?meetingId='.$meetingId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('access-token'),
+                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ]
@@ -34,7 +34,7 @@ class Invitee extends GClient
         try {
             $response = $this->client->request('GET', 'meetingInvitees/'.$inviteeID, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('access-token'),
+                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ]
@@ -68,7 +68,7 @@ class Invitee extends GClient
             $logCreated->save();
             $response = $this->client->request('POST', 'meetingInvitees', [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('access-token'),
+                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ], 'json' => $body
@@ -101,7 +101,7 @@ class Invitee extends GClient
             $body=json_encode($invitee);
             $response = $this->client->request('PUT', 'meetingInvitees/'.$inviteeId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('access-token'),
+                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ], 'json' => $body
@@ -120,7 +120,7 @@ class Invitee extends GClient
         try {
             $response = $this->client->request('DELETE', 'meetingInvitees/'.$inviteeId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('access-token'),
+                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ]

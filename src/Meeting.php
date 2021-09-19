@@ -15,7 +15,7 @@ class Meeting extends GClient
         try {
             $response = $this->client->request('GET', 'meetings/'.$meetingId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('access-token'),
+                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ]
@@ -50,7 +50,7 @@ class Meeting extends GClient
             $logCreated->save();
             $response = $this->client->request('POST', 'meetings', [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('access-token'),
+                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ], 'json' => $body
@@ -83,7 +83,7 @@ class Meeting extends GClient
             $body=json_encode($meeting);
             $response = $this->client->request('PUT', 'meetings/'.$meetingId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('access-token'),
+                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ], 'json' => $body
@@ -102,7 +102,7 @@ class Meeting extends GClient
         try {
             $response = $this->client->request('DELETE', 'meetings/'.$meetingId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('access-token'),
+                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ]
