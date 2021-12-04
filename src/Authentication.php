@@ -5,7 +5,7 @@ namespace Applab\WebexMeeting;
 
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
-
+use Illuminate\Support\Facades\Config;
 class Authentication extends GClient
 {
     //authenticate the app api user for all requests
@@ -13,12 +13,12 @@ class Authentication extends GClient
     {
         try{
             if(config('applab-webex.client-id')!='' && config('applab-webex.client-secret')!='') {
-                if((Cache::has('webex-access-refresh-token') && !empty(Cache::get('webex-access-refresh-token'))) || !empty(config('applab-webex.refresh-token'))) {
+                if(Cache::has('webex-access-refresh-token') && !empty(Cache::get('webex-access-refresh-token'))) {
                     $body = [
                         'grant_type' => 'refresh_token',
                         'client_id' => config('applab-webex.client-id'),
                         'client_secret' => config('applab-webex.client-secret'),
-                        'refresh_token' => Cache::get('webex-access-refresh-token')??config('applab-webex.refresh-token')
+                        'refresh_token' => Cache::get('webex-access-refresh-token')
                     ];
                 }else {
                     $body = [
@@ -41,6 +41,9 @@ class Authentication extends GClient
                         Cache::put('webex-access-refresh-token',$response->refresh_token,$response->refresh_token_expires_in);
                         return true;
                     }
+                }elseif($response->getStatusCode()==400){
+                    Cache::put('webex-access-token','');
+                    Cache::put('webex-access-refresh-token','');
                 }
                 throw new \Exception("Access Token generation failed");
             }else{
