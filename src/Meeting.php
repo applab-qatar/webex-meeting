@@ -47,7 +47,7 @@ class Meeting extends GClient
                     'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
-                ], 'json' => $body
+                ], 'json' => $meeting
             ]);
             if ($response->getStatusCode()==200) {
                 if($response->getBody()) {
@@ -87,7 +87,7 @@ class Meeting extends GClient
                     'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
-                ], 'json' => $body
+                ], 'json' => $meeting
             ]);
             if ($response->getBody()->getContents()) {
                 if ($response->getStatusCode()==200) {

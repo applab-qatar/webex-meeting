@@ -71,7 +71,7 @@ class Invitee extends GClient
                     'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
-                ], 'json' => $body
+                ], 'json' => $invitee
             ]);
             if ($response->getStatusCode()==200) {
                 if($response->getBody()) {
@@ -98,13 +98,13 @@ class Invitee extends GClient
                 \Log::error("MeetingCreation::Validation ".$validated->getMessageBag());
                 throw new Exception("Invalid input!, Ensure input(s) are correct");
             }
-            $body=json_encode($invitee);
+            //$body=json_encode($invitee);
             $response = $this->client->request('PUT', 'meetingInvitees/'.$inviteeId, [
                 'headers' => [
                     'Authorization' => "Bearer " . Cache::get('webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
-                ], 'json' => $body
+                ], 'json' => $invitee
             ]);
             if ($response->getBody()->getContents()) {
                 if ($response->getStatusCode()==200) {
