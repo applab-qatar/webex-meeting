@@ -15,7 +15,7 @@ class Meeting extends GClient
         try {
             $response = $this->client->request('GET', 'meetings/'.$meetingId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
+                    'Authorization' => "Bearer " . settings()->get('applab-webex.webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ]
@@ -44,7 +44,7 @@ class Meeting extends GClient
             $logCreated=$this->logEntry('create',$event,$body);
             $response = $this->client->request('POST', 'meetings', [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
+                    'Authorization' => "Bearer " . settings()->get('applab-webex.webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ], 'json' => $meeting
@@ -84,7 +84,7 @@ class Meeting extends GClient
             ]);
             $response = $this->client->request('PUT', 'meetings/'.$meetingId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
+                    'Authorization' => "Bearer " . settings()->get('applab-webex.webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ], 'json' => $meeting
@@ -109,7 +109,7 @@ class Meeting extends GClient
         try {
             $response = $this->client->request('DELETE', 'meetings/'.$meetingId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
+                    'Authorization' => "Bearer " . settings()->get('applab-webex.webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ]

@@ -9,47 +9,55 @@ use Illuminate\Support\Facades\Config;
 class Authentication extends GClient
 {
     //authenticate the app api user for all requests
-    public function login()
+    public function login($code = null)
     {
-        try{
-            if(config('applab-webex.client-id')!='' && config('applab-webex.client-secret')!='') {
-                if(Cache::has('webex-access-refresh-token') && !empty(Cache::get('webex-access-refresh-token'))) {
-                    $body = [
-                        'grant_type' => 'refresh_token',
-                        'client_id' => config('applab-webex.client-id'),
-                        'client_secret' => config('applab-webex.client-secret'),
-                        'refresh_token' => Cache::get('webex-access-refresh-token')
-                    ];
-                }else {
-                    $body = [
-                        'grant_type' => 'authorization_code',
-                        'client_id' => config('applab-webex.client-id'),
-                        'client_secret' => config('applab-webex.client-secret'),
-                        'code' => config('applab-webex.authorized-code'),
-                        'redirect_uri' => config('applab-webex.redirect-uri')];
-                }
-                $response = $this->client->request('POST', 'access_token',[
-                    'headers' => [
-                        'Content-Type'=>'application/x-www-form-urlencoded',
-                    ],
-                    'form_params' => $body
-                ]);
-                if($response->getStatusCode()==200){
-                    $response=json_decode($response->getBody());
-                    if($response->access_token){
-                        Cache::put('webex-access-token',$response->access_token,$response->expires_in);
-                        Cache::put('webex-access-refresh-token',$response->refresh_token,$response->refresh_token_expires_in);
-                        return true;
-                    }
-                }elseif($response->getStatusCode()==400){
-                    Cache::put('webex-access-token','');
-                    Cache::put('webex-access-refresh-token','');
-                }
-                throw new \Exception("Access Token generation failed");
-            }else{
+        try {
+            if (!config('applab-webex.client-id') || !config('applab-webex.client-secret')) {
                 throw new \Exception('Invalid input!, Ensure configuration values are correct');
             }
-        }catch(GuzzleException $e){
+            if ($code !== null) {
+                $body = [
+                    'grant_type' => 'authorization_code',
+                    'client_id' => config('applab-webex.client-id'),
+                    'client_secret' => config('applab-webex.client-secret'),
+                    'code' => $code,
+                    'redirect_uri' => config('applab-webex.redirect-uri'),
+                ];
+            } else {
+                $body = [
+                    'grant_type' => 'refresh_token',
+                    'client_id' => config('applab-webex.client-id'),
+                    'client_secret' => config('applab-webex.client-secret'),
+                    'refresh_token' => settings()->get('applab-webex.webex-access-refresh-token'),
+                ];
+            }
+            $response = $this->client->request('POST', 'access_token', [
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ],
+                'form_params' => $body
+            ]);
+            if ($response->getStatusCode() == 200) {
+                $response = json_decode($response->getBody());
+                if ($response->access_token) {
+                    settings()->set('applab-webex.webex-access-token', $response->access_token);
+                    settings()->set('applab-webex.webex-access-token-expires-in',
+                        now()->addSeconds($response->expires_in));
+                    settings()->set('applab-webex.webex-access-refresh-token', $response->refresh_token);
+                    settings()->set('applab-webex.webex-access-refresh-token-expires-in',
+                        now()->addSeconds($response->refresh_token_expires_in));
+                    settings()->save();
+                    return true;
+                }
+            } elseif ($response->getStatusCode() == 400) {
+                settings()->set('applab-webex.webex-access-token', null);
+                settings()->set('applab-webex.webex-access-token-expires-in', null);
+                settings()->set('applab-webex.webex-access-refresh-token', null);
+                settings()->set('applab-webex.webex-access-refresh-token-expires-in', null);
+                settings()->save();
+            }
+            throw new \Exception("Access Token generation failed");
+        } catch (GuzzleException $e) {
             \Log::critical("WEbEXAuthentication Failure ".$e->getMessage());
             throw $e;
         }

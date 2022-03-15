@@ -12,8 +12,9 @@ class WebexMeeting
      */
     public function __construct()
     {
-        if(!Cache::has('webex-access-token') || !Cache::has('webex-access-refresh-token') || empty(Cache::get('webex-access-token')) || empty(Cache::get('webex-access-refresh-token'))){
-            $this->authClass=new Authentication();
+        if (settings()->has('applab-webex.webex-access-token-expires-in') &&
+            Carbon::parse(settings()->get('applab-webex.webex-access-token-expires-in'))->lt(now())) {
+            $this->authClass = new Authentication();
             $this->authClass->login();
         }
         $this->meetingClass=new Meeting();

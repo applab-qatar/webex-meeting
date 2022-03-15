@@ -13,7 +13,7 @@ class Participants extends GClient
         try {
             $response = $this->client->request('GET', 'meetingParticipants?meetingId='.$meetingId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
+                    'Authorization' => "Bearer " . settings()->get('applab-webex.webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ]
@@ -32,7 +32,7 @@ class Participants extends GClient
         try {
             $response = $this->client->request('GET', 'meetingParticipants/'.$participantId, [
                 'headers' => [
-                    'Authorization' => "Bearer " . Cache::get('webex-access-token'),
+                    'Authorization' => "Bearer " . settings()->get('applab-webex.webex-access-token'),
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ]
