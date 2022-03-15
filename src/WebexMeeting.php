@@ -2,6 +2,7 @@
 
 namespace Applab\WebexMeeting;
 
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 
